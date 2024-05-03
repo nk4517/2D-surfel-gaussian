@@ -34,3 +34,4 @@ set_target_properties(CudaRasterizer PROPERTIES CUDA_ARCHITECTURES "75;86")
 
 target_include_directories(CudaRasterizer PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/cuda_rasterizer)
 target_include_directories(CudaRasterizer PRIVATE third_party/glm ${CMAKE_CUDA_TOOLKIT_INCLUDE_DIRECTORIES})
+target_include_directories(CudaRasterizer PRIVATE C:/Users/user/AppData/Local/pypoetry/Cache/virtualenvs/scanner-app-nbD9vpR--py3.10/Lib/site-packages/torch/include)
