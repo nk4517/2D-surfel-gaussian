@@ -14,6 +14,7 @@
 
 #include "config.h"
 #include "stdio.h"
+#include "helper_math.h"
 
 #define BLOCK_SIZE (BLOCK_X * BLOCK_Y)
 #define NUM_WARPS (BLOCK_SIZE/32)
@@ -161,6 +162,45 @@ __forceinline__ __device__ bool in_frustum(float3 p_orig,
 	}
 	return true;
 }
+
+__device__ inline float3 compute_2dgs_s(
+	float3 T1,
+	float3 T2,
+	float3 T4,
+	const float2 pix
+) {
+	float3 k = -T1 + pix.x * T4;
+	float3 l = -T2 + pix.y * T4;
+	float3 s = cross(k, l);
+
+//    return s / s.z;
+	return make_float3(s.x / s.z, s.y / s.z, 1.0f);
+}
+
+__device__ inline float compute_2dgs_accurate_depth(
+	float3 s,
+	float3 T4
+) {
+
+	float3 hs1 = s * T4;
+
+	return hs1.x + hs1.y + hs1.z;
+}
+
+
+__device__ inline float compute_2dgs_lowpass_dist2d_sq(
+	float2 center,
+	float2 pix
+) {
+
+	const float filtersze = sqrtf(2.f) / 2.f;
+	const float dx = pix.x - center.x;
+	const float dy = pix.y - center.y;
+	const float dist2d_sq = dx * dx + dy * dy;
+
+	return (filtersze * filtersze) * dist2d_sq;
+}
+
 
 #define CHECK_CUDA(A, debug) \
 A; if(debug) { \
