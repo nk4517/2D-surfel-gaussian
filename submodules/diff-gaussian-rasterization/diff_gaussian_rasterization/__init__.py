@@ -70,6 +70,7 @@ class _RasterizeGaussians(torch.autograd.Function):
             raster_settings.projmatrix,
             raster_settings.tanfovx,
             raster_settings.tanfovy,
+            raster_settings.K,
             raster_settings.image_height,
             raster_settings.image_width,
             sh,
@@ -162,6 +163,7 @@ class _RasterizeGaussians(torch.autograd.Function):
         return grads
 
 class GaussianRasterizationSettings(NamedTuple):
+    K : torch.Tensor
     image_height: int
     image_width: int 
     tanfovx : float

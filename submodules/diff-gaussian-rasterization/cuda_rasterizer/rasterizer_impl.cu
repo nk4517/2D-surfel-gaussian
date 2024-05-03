@@ -223,6 +223,7 @@ int CudaRasterizer::Rasterizer::forward(
 	const float *viewmatrix,
 	const float *projmatrix,
 	const float *cam_pos,
+	const float* camK,
 	const float tan_fovx, float tan_fovy,
 	const bool prefiltered,
 	float *out_color,
