@@ -10,3 +10,5 @@ dataset
 *.egg-info
 dbg
 *.ply
+.idea/
+**/cmake-build-*/
