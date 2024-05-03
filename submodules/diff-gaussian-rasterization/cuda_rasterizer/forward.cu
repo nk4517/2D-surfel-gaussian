@@ -465,18 +465,21 @@ __global__ void __launch_bounds__(BLOCK_X *BLOCK_Y)
 
 			// hx = [-1, 0, pix_cam.x], hy = [0, -1, pix_cam.y]
 			// hu = A^T * hx, hv = A^T * hy
-			float hu_1 = -1.0f * collected_A[j * 9 + 0] + pix_cam.x * collected_A[j * 9 + 6];
-			float hu_2 = -1.0f * collected_A[j * 9 + 1] + pix_cam.x * collected_A[j * 9 + 7];
-			float hu_4 = -1.0f * collected_A[j * 9 + 2] + pix_cam.x * collected_A[j * 9 + 8];
 
-			float hv_1 = -1.0f * collected_A[j * 9 + 3] + pix_cam.y * collected_A[j * 9 + 6];
-			float hv_2 = -1.0f * collected_A[j * 9 + 4] + pix_cam.y * collected_A[j * 9 + 7];
-			float hv_4 = -1.0f * collected_A[j * 9 + 5] + pix_cam.y * collected_A[j * 9 + 8];
+			float3 T1 = {collected_A[j * 9 + 0], collected_A[j * 9 + 1], collected_A[j * 9 + 2]};
+			float3 T2 = {collected_A[j * 9 + 3], collected_A[j * 9 + 4], collected_A[j * 9 + 5]};
+			float3 T4 = {collected_A[j * 9 + 6], collected_A[j * 9 + 7], collected_A[j * 9 + 8]};
 
-			const float Denom = hu_1 * hv_2 - hu_2 * hv_1;
+			float3 hu = -1.0f * T1 + pix_cam.x * T4;
+			float3 hv = -1.0f * T2 + pix_cam.y * T4;
 
-			float u = (hu_2 * hv_4 - hu_4 * hv_2) / Denom;
-			float v = (hu_4 * hv_1 - hu_1 * hv_4) / Denom;
+//			const float Denom = hu.x * hv.y - hu.y * hv.x;
+//			float u = (hu.y * hv.z - hu.z * hv.y) / Denom;
+//			float v = (hu.z * hv.x - hu.x * hv.z) / Denom;
+
+			float3 s = cross(hu, hv);
+			float u = s.x / s.z;
+			float v = s.y / s.z;
 
 			float G_u = exp(-0.5f * (u * u + v * v));
 
