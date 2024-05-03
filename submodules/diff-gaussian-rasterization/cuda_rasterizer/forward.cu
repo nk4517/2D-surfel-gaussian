@@ -491,7 +491,7 @@ __global__ void __launch_bounds__(BLOCK_X *BLOCK_Y)
 
 			float alpha = min(0.99f, con_o.w * G_hat);
 
-			if (intersect_c.z <= near)
+			if (intersect_c.z <= CFG_near)
 				continue;
 
 			if (alpha < 1.0f / 255.0f)

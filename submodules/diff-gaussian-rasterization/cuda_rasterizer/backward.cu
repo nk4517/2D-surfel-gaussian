@@ -511,7 +511,7 @@ __global__ void __launch_bounds__(BLOCK_X *BLOCK_Y)
 
 			float alpha = min(0.99f, con_o.w * G_hat);
 
-			if (intersect_c.z <= near)
+			if (intersect_c.z <= CFG_near)
 			{
 				continue;
 			}
@@ -608,7 +608,7 @@ __global__ void __launch_bounds__(BLOCK_X *BLOCK_Y)
 			Q_acc -= omega * ndc_m;
 			Q2Q_acc -= omega * ndc_m * ndc_m;
 
-#ifdef LdOrLn
+#ifdef CFG_LdOrLn
 		// dz/dp
 		// viewmatrix[2, 0], coloumn major
 		const float dz_dp0 = viewmatrix[2];
@@ -634,16 +634,16 @@ __global__ void __launch_bounds__(BLOCK_X *BLOCK_Y)
 		// }
 #endif
 
-#ifdef Ld
-			const float dLd_domega = Wd * (ndc_m * ndc_m * P_start + Q2Q_start - 2 * ndc_m * Q_start) / (W * H);
+#ifdef CFG_Ld
+			const float dLd_domega = CFG_Wd * (ndc_m * ndc_m * P_start + Q2Q_start - 2 * ndc_m * Q_start) / (W * H);
 
 			dL_dopa += (T * (dLd_domega - accum_dLd_domega_rec));
 			last_dLd_domega = dLd_domega;
-			thread_Ld += Wd * (omega * (ndc_m * ndc_m * P_acc + Q2Q_acc - 2 * ndc_m * Q_acc)) / (W * H);
+			thread_Ld += CFG_Wd * (omega * (ndc_m * ndc_m * P_acc + Q2Q_acc - 2 * ndc_m * Q_acc)) / (W * H);
 
 			// dL/dm
-			const float dL_dm = Wd * 2 * omega * (ndc_m * P_start - Q_start) / (W * H);
-			dm_dz = 2 * far * near / ((far - near) * intersect_c.z * intersect_c.z);
+			const float dL_dm = CFG_Wd * 2 * omega * (ndc_m * P_start - Q_start) / (W * H);
+			dm_dz = 2 * CFG_far * CFG_near / ((CFG_far - CFG_near) * intersect_c.z * intersect_c.z);
 			dL_dz = dL_dm * dm_dz;
 
 			atomicAdd(&dL_dmeans3D[global_id].x, dL_dz * dz_dp0);
@@ -694,7 +694,7 @@ __global__ void __launch_bounds__(BLOCK_X *BLOCK_Y)
 
 #endif
 
-#ifdef Ln
+#ifdef CFG_Ln
 			// normal: in camera space
 			float3 normal_i = collected_normal[j];
 			const bool reverse = (normal_i.x * ray_dir.x + normal_i.y * ray_dir.y + normal_i.z * ray_dir.z) > 0;
