@@ -52,7 +52,7 @@ uint32_t getHigherMsb(uint32_t n)
 // Wrapper method to call auxiliary coarse frustum containment test.
 // Mark all Gaussians that pass it.
 __global__ void checkFrustum(int P,
-							 const float *orig_points,
+							 const float3 *orig_points,
 							 const float *viewmatrix,
 							 bool *present)
 {
@@ -61,7 +61,7 @@ __global__ void checkFrustum(int P,
 		return;
 
 	float3 p_view;
-	present[idx] = in_frustum(idx, orig_points, viewmatrix, false, p_view);
+	present[idx] = in_frustum(orig_points[idx], viewmatrix, false, p_view);
 }
 
 // Generates one key/value pair for all Gaussian / tile overlaps.
@@ -140,7 +140,7 @@ __global__ void identifyTileRanges(int L, uint64_t *point_list_keys, uint2 *rang
 // Mark Gaussians as visible/invisible, based on view frustum testing
 void CudaRasterizer::Rasterizer::markVisible(
 	int P,
-	float *means3D,
+	float3 *means3D,
 	float *viewmatrix,
 	bool *present)
 {
@@ -263,7 +263,7 @@ int CudaRasterizer::Rasterizer::forward(
 	// Run preprocessing per-Gaussian (transformation, bounding, conversion of SHs to RGB)
 	CHECK_CUDA(FORWARD::preprocess(
 				   P, D, M,
-				   means3D,
+				   (const float3 *)means3D,
 				   (glm::vec3 *)scales,
 				   scale_modifier,
 				   (glm::vec4 *)rotations,
@@ -440,7 +440,7 @@ void CudaRasterizer::Rasterizer::backward(
 				   block,
 				   imgState.ranges,
 				   binningState.point_list,
-				   means3D,
+                   means3D,
 				   viewmatrix,
 				   width, height,
 				   focal_x, focal_y,

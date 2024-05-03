@@ -242,7 +242,7 @@ torch::Tensor markVisible(
 	if (P != 0)
 	{
 		CudaRasterizer::Rasterizer::markVisible(P,
-												means3D.contiguous().data<float>(),
+												(float3 *)means3D.contiguous().data<float>(),
 												viewmatrix.contiguous().data<float>(),
 												present.contiguous().data<bool>());
 	}

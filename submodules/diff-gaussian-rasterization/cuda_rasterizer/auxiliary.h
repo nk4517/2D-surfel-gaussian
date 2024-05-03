@@ -142,14 +142,11 @@ __forceinline__ __device__ float sigmoid(float x)
 	return 1.0f / (1.0f + expf(-x));
 }
 
-__forceinline__ __device__ bool in_frustum(int idx,
-	const float* orig_points,
+__forceinline__ __device__ bool in_frustum(float3 p_orig,
 	const float* viewmatrix,
 	bool prefiltered,
 	float3& p_view)
 {
-	float3 p_orig = { orig_points[3 * idx], orig_points[3 * idx + 1], orig_points[3 * idx + 2] };
-
 	// Bring points to screen space
 	p_view = transformPoint4x3(p_orig, viewmatrix);
 

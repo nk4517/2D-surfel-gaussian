@@ -222,7 +222,7 @@ __device__ void computeCov3D(const glm::vec3 scale, float mod, const glm::vec4 r
 // Perform initial steps for each Gaussian prior to rasterization.
 template <int C>
 __global__ void preprocessCUDA(int P, int D, int M,
-							   const float *orig_points,
+							   const float3 *orig_points,
 							   const glm::vec3 *scales,
 							   const float scale_modifier,
 							   const glm::vec4 *rotations,
@@ -261,11 +261,12 @@ __global__ void preprocessCUDA(int P, int D, int M,
 
 	// Perform near culling, quit if outside.
 	float3 p_view;
-	if (!in_frustum(idx, orig_points, viewmatrix, prefiltered, p_view))
+
+	if (!in_frustum(orig_points[idx], viewmatrix, prefiltered, p_view))
 		return;
 
 	// Transform point by projecting
-	float3 p_orig = {orig_points[3 * idx], orig_points[3 * idx + 1], orig_points[3 * idx + 2]};
+	float3 p_orig = orig_points[idx];
 	float4 p_hom = transformPoint4x4(p_orig, projmatrix);
 	float p_w = 1.0f / (p_hom.w + 0.0000001f);
 	float3 p_proj = {p_hom.x * p_w, p_hom.y * p_w, p_hom.z * p_w};
@@ -644,7 +645,7 @@ void FORWARD::render(
 }
 
 void FORWARD::preprocess(int P, int D, int M,
-						 const float *means3D,
+						 const float3 *means3D,
 						 const glm::vec3 *scales,
 						 const float scale_modifier,
 						 const glm::vec4 *rotations,

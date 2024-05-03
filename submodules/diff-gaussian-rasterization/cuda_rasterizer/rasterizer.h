@@ -23,7 +23,7 @@ namespace CudaRasterizer
 
 		static void markVisible(
 			int P,
-			float* means3D,
+			float3* means3D,
 			float* viewmatrix,
 			bool* present);
 
@@ -45,6 +45,7 @@ namespace CudaRasterizer
 			const float* viewmatrix,
 			const float* projmatrix,
 			const float* cam_pos,
+            const float* K,
 			const float tan_fovx, float tan_fovy,
 			const bool prefiltered,
 			float* out_color,
