@@ -62,7 +62,6 @@ namespace FORWARD
 		const float focal_y,
 		const float2 *points_xy_image,
 		const float *features,
-		const float *depths,
 		const float4 *conic_opacity,
 		const float *STuv,
 		const float *A,

@@ -350,7 +350,6 @@ int CudaRasterizer::Rasterizer::forward(
 				   focal_x, focal_y,
 				   geomState.means2D,
 				   feature_ptr,
-				   geomState.depths,
 				   geomState.conic_opacity,
 				   geomState.STuv,
 				   geomState.A,
