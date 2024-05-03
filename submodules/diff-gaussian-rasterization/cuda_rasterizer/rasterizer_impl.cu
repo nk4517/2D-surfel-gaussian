@@ -54,7 +54,6 @@ uint32_t getHigherMsb(uint32_t n)
 __global__ void checkFrustum(int P,
 							 const float *orig_points,
 							 const float *viewmatrix,
-							 const float *projmatrix,
 							 bool *present)
 {
 	auto idx = cg::this_grid().thread_rank();
@@ -62,7 +61,7 @@ __global__ void checkFrustum(int P,
 		return;
 
 	float3 p_view;
-	present[idx] = in_frustum(idx, orig_points, viewmatrix, projmatrix, false, p_view);
+	present[idx] = in_frustum(idx, orig_points, viewmatrix, false, p_view);
 }
 
 // Generates one key/value pair for all Gaussian / tile overlaps.
@@ -143,13 +142,12 @@ void CudaRasterizer::Rasterizer::markVisible(
 	int P,
 	float *means3D,
 	float *viewmatrix,
-	float *projmatrix,
 	bool *present)
 {
 	checkFrustum<<<(P + 255) / 256, 256>>>(
 		P,
 		means3D,
-		viewmatrix, projmatrix,
+		viewmatrix,
 		present);
 }
 

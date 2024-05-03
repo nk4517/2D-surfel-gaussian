@@ -231,8 +231,7 @@ RasterizeGaussiansBackwardCUDA(
 
 torch::Tensor markVisible(
 	torch::Tensor &means3D,
-	torch::Tensor &viewmatrix,
-	torch::Tensor &projmatrix)
+	torch::Tensor &viewmatrix)
 {
 	const int P = means3D.size(0);
 
@@ -243,7 +242,6 @@ torch::Tensor markVisible(
 		CudaRasterizer::Rasterizer::markVisible(P,
 												means3D.contiguous().data<float>(),
 												viewmatrix.contiguous().data<float>(),
-												projmatrix.contiguous().data<float>(),
 												present.contiguous().data<bool>());
 	}
 

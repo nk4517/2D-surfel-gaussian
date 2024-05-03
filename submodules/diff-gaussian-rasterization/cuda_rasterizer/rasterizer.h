@@ -25,7 +25,6 @@ namespace CudaRasterizer
 			int P,
 			float* means3D,
 			float* viewmatrix,
-			float* projmatrix,
 			bool* present);
 
 		static int forward(

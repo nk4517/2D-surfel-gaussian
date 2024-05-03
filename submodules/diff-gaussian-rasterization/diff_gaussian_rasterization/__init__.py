@@ -187,8 +187,7 @@ class GaussianRasterizer(nn.Module):
             raster_settings = self.raster_settings
             visible = _C.mark_visible(
                 positions,
-                raster_settings.viewmatrix,
-                raster_settings.projmatrix)
+                raster_settings.viewmatrix)
             
         return visible
 
